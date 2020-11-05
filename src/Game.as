@@ -26,7 +26,7 @@ package
 		private var jump:Boolean = false;
 		private var speedUp:int;
 		
-		private var timer:int = 30;
+		private var timer:int = 10;
 		private var score:TextField;
 		
 		//private var _starling : Starling;
@@ -106,7 +106,7 @@ package
 					if (obstacleArr[i].visible == false)
 					{
 						obstacleArr[i].visible = true;
-						obstacleItemY = obstacleArr.length <= 60 ? 550 : 475;
+						obstacleItemY = obstacleArr.length >= 60 ? 550 : 475;
 						obstacleArr[i].y = obstacleItemY;
 						break;
 					}
@@ -131,13 +131,13 @@ package
 				}
 			}
 			
-			score = new TextField(150, 50);
-			score.x = 20;
-			score.y = 20;
-			score.text = "Score: " + obstacleArr.length;
-			//score.text = "Score: " + (obstacleArr[0].visible == false);
-			//score.text = "Score: " +  (timer <= 0);
-			addChild(score);
+			//score = new TextField(150, 50);
+			//score.x = 20;
+			//score.y = 20;
+			//score.text = "Score: " + obstacleArr.length;
+			////score.text = "Score: " + (obstacleArr[0].visible == false);
+			////score.text = "Score: " +  (timer <= 0);
+			//addChild(score);
 		}
 		
 		private function pressKeyboard(e:KeyboardEvent):void
