@@ -1,4 +1,4 @@
-package 
+package
 {
 	import flash.filesystem.File;
 	import flash.ui.Keyboard;
@@ -7,23 +7,31 @@ package
 	import starling.display.Sprite;
 	import starling.events.EnterFrameEvent;
 	import starling.events.KeyboardEvent;
+	import starling.text.TextField;
+	
+	//import starling.core.Starling;
+	
 	/**
 	 * ...
 	 * @author Vendrie
 	 */
 	public class Game extends Sprite
 	{
-		private var assetsManager : AssetManager;
+		private var assetsManager:AssetManager;
 		
-		private var blockPlayer : Image;
-		private var obstacleArr: Vector.<Image> = new Vector.<Image>();
+		private var blockPlayer:Image;
+		private var obstacleArr:Vector.<Image> = new Vector.<Image>();
+		private var obstacleItemY:int = 0;
 		
-		private var jump : Boolean = false;
-		private var speedUp : int;
+		private var jump:Boolean = false;
+		private var speedUp:int;
 		
-		//private var timer : int = 30;
+		private var timer:int = 30;
+		private var score:TextField;
 		
-		public function Game() 
+		//private var _starling : Starling;
+		
+		public function Game()
 		{
 			var appDir:File = File.applicationDirectory;
 			//SET ASSETS MANAGER
@@ -34,70 +42,126 @@ package
 			assetsManager.loadQueue(startGame);
 		}
 		
-		private function startGame():void {
+		private function startGame():void
+		{
 			//create player
 			blockPlayer = new Image(assetsManager.getTexture("block"));
-			//obstacleItem = new Image(assetsManager.getTexture("circle"));
 			blockPlayer.pivotY = blockPlayer.height;
 			blockPlayer.x = 100;
 			blockPlayer.y = 600;
 			addChild(blockPlayer);
-
+			
+			//var obstacleItem : Image = new Image(assetsManager.getTexture("circle"));
+			//obstacleItem.x = 150;
+			//obstacleItem.y = 475;
+			////obstacleItem.y = 550;
+			//addChild(obstacleItem);
+			
 			//create Obstacle Items
-			for (var i : int = 0; i < 5; i++) {
-				var obstacleItem : Image = new Image(assetsManager.getTexture("circle"));
+			for (var i:int = 0; i < 20; i++)
+			{
+				var obstacleItem:Image = new Image(assetsManager.getTexture("circle"));
 				obstacleItem.visible = false;
-				obstacleItem.x = -100;
+				obstacleItem.x = 1024;
 				obstacleItem.y = 0;
 				addChild(obstacleItem);
 				obstacleArr.push(obstacleItem);
 			}
-
 			
+			//score = new TextField(150, 50);
+			//score.x = 20;
+			//score.y = 20;
+			//score.text = "Score: 0";
+			//addChild(score);
+			//
 			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, pressKeyboard);
 			this.stage.addEventListener(KeyboardEvent.KEY_UP, upKeyboard);
 			this.addEventListener(EnterFrameEvent.ENTER_FRAME, enterFrame);
 		}
 		
-		private function enterFrame(e:EnterFrameEvent):void 
+		private function enterFrame(e:EnterFrameEvent):void
 		{
 			
-			if (jump == true) {
+			if (jump == true)
+			{
 				blockPlayer.y -= speedUp;
 				
-				if (blockPlayer.y >= 601) {
+				if (blockPlayer.y >= 601)
+				{
 					jump = false;
 				}
-				if (speedUp > -10) {
+				if (speedUp > -10)
+				{
 					speedUp--;
 				}
 			}
+			// code obstacle
+			timer--;
+			if (timer <= 0)
+			{
+				timer = (Math.random() * 120) + 30;
+				
+				for (var i:int = 0; i < obstacleArr.length; i++)
+				{
+					if (obstacleArr[i].visible == false)
+					{
+						obstacleArr[i].visible = true;
+						obstacleItemY = obstacleArr.length <= 60 ? 550 : 475;
+						obstacleArr[i].y = obstacleItemY;
+						break;
+					}
+				}
+				
+				for (var j:int = 0; j < obstacleArr.length; j++)
+				{
+					if (obstacleArr[j].visible == true)
+					{
+						obstacleArr[j].x -= 100;
+					}
+					
+					if (obstacleArr[j].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[j].y >= 650)
+					{
+						score = new TextField(150, 50);
+						score.x = this.stage.width / 2;
+						score.y = this.stage.height / 2;
+						score.text = "Game Over";
+						addChild(score);
+						this.stage.starling.stop();
+					}
+				}
+			}
 			
-			
-			
+			score = new TextField(150, 50);
+			score.x = 20;
+			score.y = 20;
+			score.text = "Score: " + obstacleArr.length;
+			//score.text = "Score: " + (obstacleArr[0].visible == false);
+			//score.text = "Score: " +  (timer <= 0);
+			addChild(score);
 		}
 		
-		private function pressKeyboard(e:KeyboardEvent):void 
+		private function pressKeyboard(e:KeyboardEvent):void
 		{
 			if (jump == true) return;
-			if (e.keyCode == Keyboard.UP) 
+			if (e.keyCode == Keyboard.UP)
 			{
 				jump = true;
 				speedUp = 20;
-			} 
+			}
 			else if (e.keyCode == Keyboard.DOWN)
 			{
 				blockPlayer.scaleY = 0.5;
 			}
 		}
 		
-		private function upKeyboard(e:KeyboardEvent):void 
+		private function upKeyboard(e:KeyboardEvent):void
 		{
-			if (e.keyCode == Keyboard.DOWN) {
+			if (e.keyCode == Keyboard.DOWN)
+			{
 				blockPlayer.scaleY = 1;
 			}
 		}
-		
+	
 	}
 
 }
