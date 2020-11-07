@@ -111,20 +111,20 @@ package
 					//{
 						obstacleArr[i].visible = true;
 						obstacleItemX = obstacleArr[i].x;
-						obstacleItemY = obstacleArr.length >= 60 ? 550 : 475;
+						obstacleItemY = obstacleArr.length >= 10 ? 550 : 475;
 						obstacleArr[i].y = obstacleItemY;
 						//break;
 					//}
 					
-					if (obstacleArr[j].visible == true){
-						obstacleArr[j].x -= 100;
+					if (obstacleArr[i].visible == true){
+						obstacleArr[i].x -= 100;
 					}
-					if (obstacleArr[j].visible == false){
-						if (obstacleArr[j].x <= obstacleItemX){
-							obstacleArr[j].visible = false;
-						}
-					}
-					if (obstacleArr[j].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[j].y >= 650)
+					//if (obstacleArr[i].visible == false){
+						//if (obstacleArr[i].x <= obstacleItemX){
+							//obstacleArr[i].visible = false;
+						//}
+					//}
+					if (obstacleArr[i].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[i].y >= 650)
 					{
 						score = new TextField(150, 50);
 						score.x = this.stage.width / 2;
