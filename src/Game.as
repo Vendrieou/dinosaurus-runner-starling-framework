@@ -21,7 +21,6 @@ package
 		
 		private var blockPlayer:Image;
 		private var obstacleArr:Vector.<Image> = new Vector.<Image>();
-		private var obstacleItemX:int = 0;
 		private var obstacleItemY:int = 0;
 		private var obstacleSpeed:int = 10;
 		
@@ -29,10 +28,9 @@ package
 		private var speedUp:int;
 		
 		private var timer:int = 30;
+		private var GameOverText:TextField;
 		private var scoreText:TextField;
 		private var score:int = 0;
-		
-		//private var _starling : Starling;
 		
 		public function Game()
 		{
@@ -54,14 +52,8 @@ package
 			blockPlayer.y = 600;
 			addChild(blockPlayer);
 			
-			//var obstacleItem : Image = new Image(assetsManager.getTexture("circle"));
-			//obstacleItem.x = 150;
-			//obstacleItem.y = 475;
-			////obstacleItem.y = 550;
-			//addChild(obstacleItem);
-			
 			//create Obstacle Items
-			for (var i:int = 0; i < 10; i++)
+			for (var i:int = 0; i < 1; i++)
 			{
 				var obstacleItem:Image = new Image(assetsManager.getTexture("circle"));
 				obstacleItem.visible = false;
@@ -71,12 +63,15 @@ package
 				obstacleArr.push(obstacleItem);
 			}
 			
-			//score = new TextField(150, 50);
-			//score.x = 20;
-			//score.y = 20;
-			//score.text = "Score: 0";
-			//addChild(score);
-			//
+			scoreText = new TextField(150, 50);
+			scoreText.x = 20;
+			scoreText.y = 20;
+			scoreText.text = "Score: 0";
+			addChild(scoreText);
+			
+			GameOverText = new TextField((this.stage.width / 2), (this.stage.height / 2));
+			addChild(GameOverText);
+			
 			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, pressKeyboard);
 			this.stage.addEventListener(KeyboardEvent.KEY_UP, upKeyboard);
 			//this.stage.addEventListener(KeyboardEvent.KEY_DOWN, pressRestartGame);
@@ -85,8 +80,8 @@ package
 		
 		private function enterFrame(e:EnterFrameEvent):void
 		{
-			scoreText = new TextField(150, 50);
 			scoreText.text = "Score: " + score;
+			addChild(scoreText);
 			
 			if (jump == true)
 			{
@@ -109,9 +104,8 @@ package
 					if (obstacleArr[i].visible == false)
 					{
 						obstacleArr[i].visible = true;
-						obstacleItemX = obstacleArr[i].x;
-						obstacleItemY = obstacleArr.length >= 10 ? 550 : 475;
-						//obstacleItemY = randomRange(obstacleArr.length, 2) % 1 ? 550 : 475; 
+						obstacleItemY = 550;
+						//obstacleItemY = randomRange(obstacleArr.length, 2) % 1 ? 550 : 475;
 						obstacleArr[i].y = obstacleItemY;
 					}
 					
@@ -121,19 +115,18 @@ package
 					
 					if (obstacleArr[i].x <= 0){
 						obstacleArr[i].x = this.stage.width + randomRange(200, 800);
+						obstacleArr[i].y = randomRange(1, 2) % 2 == 0 ? 475 : 550;
 						score++;
 					}
 				
 					if (obstacleArr[i].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[i].y >= 650)
 					{
-						//scoreText.x = this.stage.width / 2;
-						//scoreText.y = this.stage.height / 2;
 						//score.text = "Game Over Press 'R' to Restart Game";
-						//scoreText.text += "   Game Over";
+						GameOverText.text = "Game Over";
 						this.stage.starling.stop();
 					}
 				}
-				addChild(scoreText);
+				addChild(GameOverText);
 
 			//score = new TextField(150, 50);
 			//score.x = 20;
