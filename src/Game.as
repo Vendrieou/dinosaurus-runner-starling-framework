@@ -9,8 +9,6 @@ package
 	import starling.events.KeyboardEvent;
 	import starling.text.TextField;
 	
-	//import starling.core.Starling;
-	
 	/**
 	 * ...
 	 * @author Vendrie
@@ -27,7 +25,6 @@ package
 		private var jump:Boolean = false;
 		private var speedUp:int;
 		
-		private var timer:int = 30;
 		private var GameOverText:TextField;
 		private var scoreText:TextField;
 		private var score:int = 0;
@@ -114,11 +111,8 @@ package
 					// auto JUMP & DUCK from Obstacles
 					//--start--
 					if (obstacleArr[i].y == 550 && obstacleArr[i].x <= 150)
-					{
-						jump = true;
-						speedUp = 20;
-						blockPlayer.scaleY = 1;
-						blockPlayer.y = 475;
+					{				
+						this.onJump();
 					}
 					else if (obstacleArr[i].y == 475 && obstacleArr[i].x <= 150) 
 					{
@@ -169,6 +163,13 @@ package
 				blockPlayer.scaleY = 1;
 			}
 		}
+		
+		private function onJump():void{
+			if (jump == true) return;
+			jump = true;
+			speedUp = 20;
+			blockPlayer.y = 470;
+		}
 	
 		private function randomRange(minNum:Number, maxNum:Number):Number
 		{
@@ -181,7 +182,6 @@ package
 				//this.stage.starling.start();
 			//}
 		//}
-	
 	}
 
 }
