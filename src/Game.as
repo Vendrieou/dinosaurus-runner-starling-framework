@@ -97,8 +97,7 @@ package
 				}
 			}
 
-			// code obstacle
-			
+			// code obstacles
 				for (var i:int = 0; i < obstacleArr.length; i++)
 				{
 					if (obstacleArr[i].visible == false)
@@ -112,37 +111,36 @@ package
 						obstacleArr[i].x -= 5;
 					}
 					
+					// auto JUMP & DUCK from Obstacles
+					//--start--
+					if (obstacleArr[i].y == 550 && obstacleArr[i].x <= 150)
+					{
+						jump = true;
+						speedUp = 20;
+						blockPlayer.scaleY = 1;
+						blockPlayer.y = 475;
+					}
+					else if (obstacleArr[i].y == 475 && obstacleArr[i].x <= 150) 
+					{
+						blockPlayer.scaleY = 0.5;
+					} 
+					if (obstacleArr[i].x <= 0) {
+						blockPlayer.scaleY = 1;	 
+					}
+					//--end--
+			
+					// add score after pass obstacle
 					if (obstacleArr[i].x <= 0){
 						obstacleArr[i].x = this.stage.width + randomRange(200, 800);
+						// get random position obstacles
 						obstacleArr[i].y = randomRange(1, 2) % 2 == 0 ? 475 : 550;
 						score++;
 					}
-					// auto JUMP & DUCK from Obstacle
-					if (obstacleArr[i].x < 110)
-					{
-						//jump = true;
-						//speedUp = 20;
-						blockPlayer.scaleY = 1;
-					}
-					//else if (obstacleArr[i].y == 475 && obstacleArr[i].x <= 110) 
-					//{
-						//blockPlayer.scaleY = 0.5;
-					//} 
-					//if (obstacleArr[i].y == 550 && obstacleArr[i].x < 110)
-					//{
-						//jump = true;
-						//speedUp = 20;
-						//blockPlayer.scaleY = 1;
-					//}
-					//else if (obstacleArr[i].y == 475 && obstacleArr[i].x <= 110) 
-					//{
-						//blockPlayer.scaleY = 0.5;
-					//} 
-					
 				
+					// show game over and stop enterFrame process
 					if (obstacleArr[i].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[i].y >= 650)
 					{
-						//score.text = "Game Over Press 'R' to Restart Game";
+						//GameOverText.text = "Game Over Press 'R' to Restart Game";
 						GameOverText.text = "Game Over";
 						this.stage.starling.stop();
 					}
@@ -177,12 +175,11 @@ package
 			return (Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum);
 		}
 	
-		//private function pressRestartGame(e:KeyboardEvent):void
+		//private function pressRestartGame():void
 		//{
-		//if (e.charCode == 82)
-		//{
-		//this.stage.starling.start();
-		//}
+			//if (e.keyCode.toString() == '82')
+				//this.stage.starling.start();
+			//}
 		//}
 	
 	}
