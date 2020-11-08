@@ -60,7 +60,7 @@ package
 			//addChild(obstacleItem);
 			
 			//create Obstacle Items
-			for (var i:int = 0; i < 20; i++)
+			for (var i:int = 0; i < 10; i++)
 			{
 				var obstacleItem:Image = new Image(assetsManager.getTexture("circle"));
 				obstacleItem.visible = false;
@@ -84,6 +84,7 @@ package
 		
 		private function enterFrame(e:EnterFrameEvent):void
 		{
+			score = new TextField(150, 50);
 			
 			if (jump == true)
 			{
@@ -98,11 +99,12 @@ package
 					speedUp--;
 				}
 			}
+
 			// code obstacle
-			timer--;
-			if (timer <= 0)
-			{
-				timer = (Math.random() * 120) + 30;
+			//timer--;
+			//if (timer <= 0)
+			//{
+				//timer = (Math.random() * 120) + 30;
 				//timer = randomRange(-10, 10);
 				
 				for (var i:int = 0; i < obstacleArr.length; i++)
@@ -111,13 +113,14 @@ package
 					//{
 						obstacleArr[i].visible = true;
 						obstacleItemX = obstacleArr[i].x;
-						obstacleItemY = obstacleArr.length >= 10 ? 550 : 475;
+						//obstacleItemY = obstacleArr.length >= 10 ? 550 : 475;
+						obstacleItemY = randomRange(obstacleArr.length, 2) % 1 ? 550 : 475; 
 						obstacleArr[i].y = obstacleItemY;
 						//break;
 					//}
 					
 					if (obstacleArr[i].visible == true){
-						obstacleArr[i].x -= 100;
+						obstacleArr[i].x -= 5;
 					}
 					//if (obstacleArr[i].visible == false){
 						//if (obstacleArr[i].x <= obstacleItemX){
@@ -126,7 +129,6 @@ package
 					//}
 					if (obstacleArr[i].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[i].y >= 650)
 					{
-						score = new TextField(150, 50);
 						score.x = this.stage.width / 2;
 						score.y = this.stage.height / 2;
 						//score.text = "Game Over Press 'R' to Restart Game";
@@ -186,7 +188,7 @@ package
 						////obstacleArr[j].visible = false;
 					////}
 				//}
-			}
+			//}
 		
 			//score = new TextField(150, 50);
 			//score.x = 20;
@@ -219,10 +221,10 @@ package
 			}
 		}
 	
-		//private function randomRange(minNum:Number, maxNum:Number):Number
-		//{
-		//return (Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum);
-		//}
+		private function randomRange(minNum:Number, maxNum:Number):Number
+		{
+			return (Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum);
+		}
 	
 		//private function pressRestartGame(e:KeyboardEvent):void
 		//{
