@@ -39,6 +39,12 @@ package
 			//NativeApplication.nativeApplication.exit();
 		}
 		
+		//public function restart(){
+			//removeChild(game, true);
+			//game = new Game();
+			//addChild(game);
+		//}
+		
 	}
 	
 }

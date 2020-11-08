@@ -9,8 +9,6 @@ package
 	import starling.events.KeyboardEvent;
 	import starling.text.TextField;
 	
-	//import starling.core.Starling;
-	
 	/**
 	 * ...
 	 * @author Vendrie
@@ -22,14 +20,14 @@ package
 		private var blockPlayer:Image;
 		private var obstacleArr:Vector.<Image> = new Vector.<Image>();
 		private var obstacleItemY:int = 0;
+		private var obstacleSpeed:int = 10;
 		
 		private var jump:Boolean = false;
 		private var speedUp:int;
 		
-		private var timer:int = 10;
-		private var score:TextField;
-		
-		//private var _starling : Starling;
+		private var GameOverText:TextField;
+		private var scoreText:TextField;
+		private var score:int = 0;
 		
 		public function Game()
 		{
@@ -51,14 +49,8 @@ package
 			blockPlayer.y = 600;
 			addChild(blockPlayer);
 			
-			//var obstacleItem : Image = new Image(assetsManager.getTexture("circle"));
-			//obstacleItem.x = 150;
-			//obstacleItem.y = 475;
-			////obstacleItem.y = 550;
-			//addChild(obstacleItem);
-			
 			//create Obstacle Items
-			for (var i:int = 0; i < 20; i++)
+			for (var i:int = 0; i < 1; i++)
 			{
 				var obstacleItem:Image = new Image(assetsManager.getTexture("circle"));
 				obstacleItem.visible = false;
@@ -68,19 +60,25 @@ package
 				obstacleArr.push(obstacleItem);
 			}
 			
-			//score = new TextField(150, 50);
-			//score.x = 20;
-			//score.y = 20;
-			//score.text = "Score: 0";
-			//addChild(score);
-			//
+			scoreText = new TextField(150, 50);
+			scoreText.x = 20;
+			scoreText.y = 20;
+			scoreText.text = "Score: 0";
+			addChild(scoreText);
+			
+			GameOverText = new TextField((this.stage.width / 2), (this.stage.height / 2));
+			addChild(GameOverText);
+			
 			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, pressKeyboard);
 			this.stage.addEventListener(KeyboardEvent.KEY_UP, upKeyboard);
+			//this.stage.addEventListener(KeyboardEvent.KEY_DOWN, pressRestartGame);
 			this.addEventListener(EnterFrameEvent.ENTER_FRAME, enterFrame);
 		}
 		
 		private function enterFrame(e:EnterFrameEvent):void
 		{
+			scoreText.text = "Score: " + score;
+			addChild(scoreText);
 			
 			if (jump == true)
 			{
@@ -95,49 +93,53 @@ package
 					speedUp--;
 				}
 			}
-			// code obstacle
-			timer--;
-			if (timer <= 0)
-			{
-				timer = (Math.random() * 120) + 30;
-				
+
+			// code obstacles
 				for (var i:int = 0; i < obstacleArr.length; i++)
 				{
 					if (obstacleArr[i].visible == false)
 					{
 						obstacleArr[i].visible = true;
-						obstacleItemY = obstacleArr.length >= 60 ? 550 : 475;
+						obstacleItemY = 550;
 						obstacleArr[i].y = obstacleItemY;
-						break;
-					}
-				}
-				
-				for (var j:int = 0; j < obstacleArr.length; j++)
-				{
-					if (obstacleArr[j].visible == true)
-					{
-						obstacleArr[j].x -= 100;
 					}
 					
-					if (obstacleArr[j].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[j].y >= 650)
+					if (obstacleArr[i].visible == true){
+						obstacleArr[i].x -= 5;
+					}
+					
+					// auto JUMP & DUCK from Obstacles
+					//--start--
+					if (obstacleArr[i].y == 550 && obstacleArr[i].x <= 150)
+					{				
+						this.onJump();
+					}
+					else if (obstacleArr[i].y == 475 && obstacleArr[i].x <= 150) 
 					{
-						score = new TextField(150, 50);
-						score.x = this.stage.width / 2;
-						score.y = this.stage.height / 2;
-						score.text = "Game Over";
-						addChild(score);
+						blockPlayer.scaleY = 0.5;
+					} 
+					if (obstacleArr[i].x <= 0) {
+						blockPlayer.scaleY = 1;	 
+					}
+					//--end--
+			
+					// add score after pass obstacle
+					if (obstacleArr[i].x <= 0){
+						obstacleArr[i].x = this.stage.width + randomRange(200, 800);
+						// get random position obstacles
+						obstacleArr[i].y = randomRange(1, 2) % 2 == 0 ? 475 : 550;
+						score++;
+					}
+				
+					// show game over and stop enterFrame process
+					if (obstacleArr[i].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[i].y >= 650)
+					{
+						//GameOverText.text = "Game Over Press 'R' to Restart Game";
+						GameOverText.text = "Game Over";
 						this.stage.starling.stop();
 					}
 				}
-			}
-			
-			//score = new TextField(150, 50);
-			//score.x = 20;
-			//score.y = 20;
-			//score.text = "Score: " + obstacleArr.length;
-			////score.text = "Score: " + (obstacleArr[0].visible == false);
-			////score.text = "Score: " +  (timer <= 0);
-			//addChild(score);
+				addChild(GameOverText);
 		}
 		
 		private function pressKeyboard(e:KeyboardEvent):void
@@ -161,7 +163,25 @@ package
 				blockPlayer.scaleY = 1;
 			}
 		}
+		
+		private function onJump():void{
+			if (jump == true) return;
+			jump = true;
+			speedUp = 20;
+			blockPlayer.y = 470;
+		}
 	
+		private function randomRange(minNum:Number, maxNum:Number):Number
+		{
+			return (Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum);
+		}
+	
+		//private function pressRestartGame():void
+		//{
+			//if (e.keyCode.toString() == '82')
+				//this.stage.starling.start();
+			//}
+		//}
 	}
 
 }
