@@ -29,7 +29,8 @@ package
 		private var speedUp:int;
 		
 		private var timer:int = 30;
-		private var score:TextField;
+		private var scoreText:TextField;
+		private var score:int = 0;
 		
 		//private var _starling : Starling;
 		
@@ -84,7 +85,8 @@ package
 		
 		private function enterFrame(e:EnterFrameEvent):void
 		{
-			score = new TextField(150, 50);
+			scoreText = new TextField(150, 50);
+			scoreText.text = "Score: " + score;
 			
 			if (jump == true)
 			{
@@ -101,100 +103,43 @@ package
 			}
 
 			// code obstacle
-			//timer--;
-			//if (timer <= 0)
-			//{
-				//timer = (Math.random() * 120) + 30;
-				//timer = randomRange(-10, 10);
-				
+			
 				for (var i:int = 0; i < obstacleArr.length; i++)
 				{
-					//if (obstacleArr[i].visible == false)
-					//{
+					if (obstacleArr[i].visible == false)
+					{
 						obstacleArr[i].visible = true;
 						obstacleItemX = obstacleArr[i].x;
-						//obstacleItemY = obstacleArr.length >= 10 ? 550 : 475;
-						obstacleItemY = randomRange(obstacleArr.length, 2) % 1 ? 550 : 475; 
+						obstacleItemY = obstacleArr.length >= 10 ? 550 : 475;
+						//obstacleItemY = randomRange(obstacleArr.length, 2) % 1 ? 550 : 475; 
 						obstacleArr[i].y = obstacleItemY;
-						//break;
-					//}
+					}
 					
 					if (obstacleArr[i].visible == true){
 						obstacleArr[i].x -= 5;
 					}
-					//if (obstacleArr[i].visible == false){
-						//if (obstacleArr[i].x <= obstacleItemX){
-							//obstacleArr[i].visible = false;
-						//}
-					//}
+					
+					if (obstacleArr[i].x <= 0){
+						obstacleArr[i].x = this.stage.width + randomRange(200, 800);
+						score++;
+					}
+				
 					if (obstacleArr[i].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[i].y >= 650)
 					{
-						score.x = this.stage.width / 2;
-						score.y = this.stage.height / 2;
+						//scoreText.x = this.stage.width / 2;
+						//scoreText.y = this.stage.height / 2;
 						//score.text = "Game Over Press 'R' to Restart Game";
-						score.text = "Game Over";
-						addChild(score);
+						//scoreText.text += "   Game Over";
 						this.stage.starling.stop();
 					}
 				}
-				
-				//for (var j:int = 0; j < obstacleArr.length; j++)
-				//{
-					//
-					//if (obstacleArr[j].visible == true){
-						//obstacleArr[j].x -= 100;
-					//}
-					//if (obstacleArr[j].visible == false){
-						//if (obstacleArr[j].x <= obstacleItemX){
-							//obstacleArr[j].visible = false;
-						//}
-					//}
-					//if (obstacleArr[j].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[j].y >= 650)
-					//{
-						//score = new TextField(150, 50);
-						//score.x = this.stage.width / 2;
-						//score.y = this.stage.height / 2;
-						////score.text = "Game Over Press 'R' to Restart Game";
-						//score.text = "Game Over";
-						//addChild(score);
-						//this.stage.starling.stop();
-					//}
-					//
-					//
-					//
-					////if (obstacleArr[j].visible == true)
-					////{
-						////obstacleArr[j].x -= 5;
-							//////obstacleArr[j].x = this.stage.width - randomRange(200, 800);
-					////}
-					//
-					////if (obstacleArr[j].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[j].y >= 650)
-					////{
-						////obstacleArr[j].y = -100;
-						////obstacleArr[j].visible = false;
-						////
-						////score = new TextField(150, 50);
-						////score.x = this.stage.width / 2;
-						////score.y = this.stage.height / 2;
-						//////score.text = "Game Over Press 'R' to Restart Game";
-						////score.text = "Game Over";
-						////addChild(score);
-						////this.stage.starling.stop();
-					////}
-					//
-					////if (obstacleArr[j].y >= 650)
-					////{
-						////obstacleArr[j].y = -100;
-						////obstacleArr[j].visible = false;
-					////}
-				//}
-			//}
-		
+				addChild(scoreText);
+
 			//score = new TextField(150, 50);
 			//score.x = 20;
 			//score.y = 20;
 			//score.text = "Score: " + obstacleArr.length;
-			////score.text = "Score: " + (obstacleArr[0].visible == false);
+			//score.text = "Score: " + (obstacleArr[0].visible == false);
 			////score.text = "Score: " +  (timer <= 0);
 			//addChild(score);
 		}
