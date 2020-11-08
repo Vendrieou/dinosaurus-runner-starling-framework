@@ -105,7 +105,6 @@ package
 					{
 						obstacleArr[i].visible = true;
 						obstacleItemY = 550;
-						//obstacleItemY = randomRange(obstacleArr.length, 2) % 1 ? 550 : 475;
 						obstacleArr[i].y = obstacleItemY;
 					}
 					
@@ -118,6 +117,28 @@ package
 						obstacleArr[i].y = randomRange(1, 2) % 2 == 0 ? 475 : 550;
 						score++;
 					}
+					// auto JUMP & DUCK from Obstacle
+					if (obstacleArr[i].x < 110)
+					{
+						//jump = true;
+						//speedUp = 20;
+						blockPlayer.scaleY = 1;
+					}
+					//else if (obstacleArr[i].y == 475 && obstacleArr[i].x <= 110) 
+					//{
+						//blockPlayer.scaleY = 0.5;
+					//} 
+					//if (obstacleArr[i].y == 550 && obstacleArr[i].x < 110)
+					//{
+						//jump = true;
+						//speedUp = 20;
+						//blockPlayer.scaleY = 1;
+					//}
+					//else if (obstacleArr[i].y == 475 && obstacleArr[i].x <= 110) 
+					//{
+						//blockPlayer.scaleY = 0.5;
+					//} 
+					
 				
 					if (obstacleArr[i].bounds.intersects(blockPlayer.bounds) == true || obstacleArr[i].y >= 650)
 					{
@@ -127,14 +148,6 @@ package
 					}
 				}
 				addChild(GameOverText);
-
-			//score = new TextField(150, 50);
-			//score.x = 20;
-			//score.y = 20;
-			//score.text = "Score: " + obstacleArr.length;
-			//score.text = "Score: " + (obstacleArr[0].visible == false);
-			////score.text = "Score: " +  (timer <= 0);
-			//addChild(score);
 		}
 		
 		private function pressKeyboard(e:KeyboardEvent):void
